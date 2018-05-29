@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChampionSelector", "ChampionSelector.csproj", "{7085C2E8-A71D-4C31-A545-6261EA57A344}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7085C2E8-A71D-4C31-A545-6261EA57A344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7085C2E8-A71D-4C31-A545-6261EA57A344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7085C2E8-A71D-4C31-A545-6261EA57A344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7085C2E8-A71D-4C31-A545-6261EA57A344}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

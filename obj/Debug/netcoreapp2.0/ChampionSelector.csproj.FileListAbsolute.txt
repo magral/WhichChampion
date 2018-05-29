@@ -1,0 +1,10 @@
+E:\Documents\RiderProjects\ChampionSelector\bin\Debug\netcoreapp2.0\ChampionSelector.deps.json
+E:\Documents\RiderProjects\ChampionSelector\bin\Debug\netcoreapp2.0\ChampionSelector.runtimeconfig.json
+E:\Documents\RiderProjects\ChampionSelector\bin\Debug\netcoreapp2.0\ChampionSelector.runtimeconfig.dev.json
+E:\Documents\RiderProjects\ChampionSelector\bin\Debug\netcoreapp2.0\ChampionSelector.dll
+E:\Documents\RiderProjects\ChampionSelector\bin\Debug\netcoreapp2.0\ChampionSelector.pdb
+E:\Documents\RiderProjects\ChampionSelector\obj\Debug\netcoreapp2.0\ChampionSelector.csproj.CoreCompileInputs.cache
+E:\Documents\RiderProjects\ChampionSelector\obj\Debug\netcoreapp2.0\ChampionSelector.AssemblyInfoInputs.cache
+E:\Documents\RiderProjects\ChampionSelector\obj\Debug\netcoreapp2.0\ChampionSelector.AssemblyInfo.cs
+E:\Documents\RiderProjects\ChampionSelector\obj\Debug\netcoreapp2.0\ChampionSelector.dll
+E:\Documents\RiderProjects\ChampionSelector\obj\Debug\netcoreapp2.0\ChampionSelector.pdb

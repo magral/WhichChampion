@@ -1,0 +1,27 @@
+- symbol: question_1
+  question: "What lane do you feel like playing?"
+  answers:
+    - "Top"
+    - "Jungle"
+    - "Mid"
+    - "Bottom"
+    - "Support"
+- symbol: question_2
+  question: "What style do you want to play?"
+  answers:
+    - "Ranged"
+    - "Bruiser"
+    - "Tank"
+- symbol: question_3
+  question: "Preference on damage type?"
+  answers:
+    - "AP"
+    - "AD"
+    - "Hybrid"
+    - "Don't Care"
+- symbol: question_4
+  question: Do you want to try something new, or play something you know?"
+  answers:
+    - "Try something new!"
+    - "Give me something familiar"
+    - "I really don't care"
