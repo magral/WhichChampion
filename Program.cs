@@ -9,9 +9,7 @@ namespace ChampionSelector
     class Program
     {
         static void Main(string[] args)
-        {
-            Util util = new Util();
-            
+        {            
             //Construct API call
             APIMessage apiCall = new APIMessage();
             ChampionDto champData = apiCall.MakeRequest();

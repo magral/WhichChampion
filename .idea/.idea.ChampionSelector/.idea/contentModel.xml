@@ -3,6 +3,7 @@
   <component name="ContentModelStore">
     <e p="C:\Users\Leah\.Rider2018.1\system\resharper-host\local\Transient\ReSharperHost\v12\SolutionCaches\_ChampionSelector.282879107.00" t="ExcludeRecursive" />
     <e p="E:\Documents\RiderProjects\ChampionSelector" t="IncludeRecursive">
+      <e p=".gitignore" t="Include" />
       <e p="Answer.cs" t="Include" />
       <e p="APIMessage.cs" t="Include" />
       <e p="bin" t="ExcludeRecursive" />
@@ -20,7 +21,7 @@
       <e p="packages" t="ExcludeRecursive" />
       <e p="Program.cs" t="Include" />
       <e p="Question.cs" t="Include" />
-      <e p="Util.cs" t="Include" />
+      <e p="README.md" t="Include" />
     </e>
   </component>
 </project>
