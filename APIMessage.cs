@@ -29,10 +29,10 @@ namespace ChampionSelector
     }
     public class APIMessage
     {
-        private const string URL = "https://na1.api.riotgames.com/lol/static-data/v3/champions?locale=en_US&champListData=info&champListData=tags&dataById=false&api_key=RGAPI-2259d8e4-28f5-4369-a462-97becff1a046";
-
-        public ChampionDto MakeRequest()
+        public static List<Champion> MakeRequest()
         {
+            const string URL = "https://na1.api.riotgames.com/lol/static-data/v3/champions?locale=en_US&champListData=info&champListData=tags&dataById=false&api_key={key}";
+
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(URL);
 
@@ -48,8 +48,14 @@ namespace ChampionSelector
 
             var resp = new StreamReader(response.GetResponseStream()).ReadToEnd();
             var data = JsonConvert.DeserializeObject<ChampionDto>(resp);
+            
+            List<Champion> champions = new List<Champion>();
+            foreach (var c in data.Data)
+            {
+                champions.Add(new Champion(c.Value.Name, c.Value.Tags, c.Value.Info));
+            }
 
-            return data;
+            return champions;
         }
     }
 }

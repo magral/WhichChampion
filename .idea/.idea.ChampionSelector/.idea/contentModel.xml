@@ -10,6 +10,7 @@
       <e p="Champion.cs" t="Include" />
       <e p="ChampionSelector.csproj" t="IncludeRecursive" />
       <e p="ChampionSelector.sln" t="IncludeFlat" />
+      <e p="ChampionUtil.cs" t="Include" />
       <e p="Data.yaml" t="Include" />
       <e p="obj" t="ExcludeRecursive">
         <e p="Debug" t="Include">

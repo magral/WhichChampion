@@ -36,37 +36,6 @@ namespace ChampionSelector
         NoPref
     }
 
-    public class Champions
-    {
-        private List<Champion> champions { get; }
-
-        public Champions(ChampionDto champData)
-        {
-            champions = new List<Champion>();
-            foreach (var c in champData.Data)
-            {
-                champions.Add(new Champion(c.Value.Name, c.Value.Tags, c.Value.Info));
-            }
-        }
-
-        public List<Champion> FilterCrewByCriteria(Answer answer)
-        {
-            List<Champion> options = new List<Champion>();
-            foreach (Champion champ in champions)
-            {
-                bool hasLane = champ.MainLane.Contains(answer.lane);
-                bool hasDamageType = answer.dmgType == champ.DmgType;
-                bool hasNewness = answer.isNew == champ.TryNew;
-                bool hasRole = champ.Roles.Contains(answer.role);
-                if (hasLane && hasDamageType && hasNewness && hasRole)
-                {
-                    options.Add(champ);
-                }
-            }
-            return options;
-        }
-    }
-
     public class Champion
     {
         private string _name;
@@ -97,9 +66,9 @@ namespace ChampionSelector
 
         public Champion(string name, List<string> tags, Dictionary<string, int> damageTypes)
         {
-            this._name = name;
-            this._damageType = GetDamageType(damageTypes);
-            this._mainLane = GetLanes(tags);
+            _name = name;
+            _damageType = GetDamageType(damageTypes);
+            _mainLane = GetLanes(tags);
         }
 
         private List<Lane> GetLanes(List<string> tags)

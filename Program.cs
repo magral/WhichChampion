@@ -8,18 +8,22 @@ namespace ChampionSelector
 {    
     class Program
     {
+        private const string RoleQuestion = "RoleQuestion";
+        private const string LaneQuestion = "LaneQuestion";
+        private const string DamageQuestion = "DamageQuestion";
+        private const string NewnessQuestion = "NewnessQuestion";
+        
         static void Main(string[] args)
         {            
-            //Construct API call
-            APIMessage apiCall = new APIMessage();
-            ChampionDto champData = apiCall.MakeRequest();
-            Champions champs = new Champions(champData);
+            //Construct API call and get champion list
+            List<Champion> champData = APIMessage.MakeRequest();
             
             //Construct question list
             Questions questionList = new Questions(Document);
             
             //Holds answers to questions
             Answer ans = new Answer();
+            
             //Ask questions
             foreach(QuestionObj q in questionList.questions)
             {
@@ -31,27 +35,27 @@ namespace ChampionSelector
                 string input = (Console.ReadLine());
                 LogQuestion(ans, q.symbol, input);
             }
-            Console.WriteLine(champs.FilterCrewByCriteria(ans));
+            Console.WriteLine(ChampionUtil.FilterCrewByCriteria(ans, champData));
         }
 
         private static void LogQuestion(Answer ans, string questionSymbol, string answer)
         {
-            if (questionSymbol == "question_1")
+            if (questionSymbol == LaneQuestion)
             {
                 Lane.TryParse(answer, out Lane lane);
                 ans.lane = lane;
             }
-            else if (questionSymbol == "question_2")
+            else if (questionSymbol == RoleQuestion)
             {
                 Role.TryParse(answer, out Role role);
                 ans.role = role;
             }
-            else if (questionSymbol == "question_3")
+            else if (questionSymbol == DamageQuestion)
             {
                 DamageType.TryParse(answer, out DamageType dmg);
                 ans.dmgType = dmg;
             }
-            else if (questionSymbol == "question_4")
+            else if (questionSymbol == NewnessQuestion)
             {
                 IsNew.TryParse(answer, out IsNew n);
                 ans.isNew = n;
@@ -60,7 +64,7 @@ namespace ChampionSelector
         
         private const string Document = @"---
         questions:
-            - symbol: question_1
+            - symbol: LaneQuestion
               question: What lane do you feel like playing?
               answers:
                 - Top
@@ -68,20 +72,20 @@ namespace ChampionSelector
                 - Mid
                 - Bottom
                 - Support
-            - symbol: question_2
+            - symbol: RoleQuestion
               question: What style do you want to play?
               answers:
                 - Ranged
                 - Bruiser
                 - Tank
-            - symbol: question_3
+            - symbol: DamageQuestion
               question: Preference on damage type?
               answers:
                 - AP
                 - AD
                 - Hybrid
                 - Don't Care
-            - symbol: question_4
+            - symbol: NewnessQuestion
               question: Do you want to try something new, or play something you know?
               answers:
                 - Try something new!
