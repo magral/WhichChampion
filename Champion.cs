@@ -22,6 +22,7 @@ namespace ChampionSelector
         Marksman = 3,
         Melee = 4
     }
+
     public enum DamageType
     {
         AD,
@@ -29,6 +30,7 @@ namespace ChampionSelector
         Hybrid,
         NoPref
     }
+
     public enum IsNew
     {
         Yes,
@@ -62,6 +64,11 @@ namespace ChampionSelector
         public List<Role> Roles
         {
             get { return _roles; }
+        }
+
+        public string Name
+        {
+            get { return _name; }
         }
 
         public Champion(string name, List<string> tags, Dictionary<string, int> damageTypes)
@@ -149,7 +156,7 @@ namespace ChampionSelector
             return lanes;
         }
 
-    private DamageType GetDamageType(Dictionary<string, int> damageTypes)
+        private DamageType GetDamageType(Dictionary<string, int> damageTypes)
         {
             if (damageTypes["attack"] > damageTypes["magic"])
             {
@@ -160,6 +167,16 @@ namespace ChampionSelector
                 return DamageType.AP;
             }
             return DamageType.Hybrid;
+        }
+
+        private Role GetRole(Dictionary<string, int> damageTypes)
+        {
+            return Role.Fighter;
+        }
+
+        private IsNew GetNewness()
+        {
+            
         }
     }
 }

@@ -12,85 +12,94 @@ namespace ChampionSelector
         private const string LaneQuestion = "LaneQuestion";
         private const string DamageQuestion = "DamageQuestion";
         private const string NewnessQuestion = "NewnessQuestion";
-        
+
         static void Main(string[] args)
-        {            
+        {
             //Construct API call and get champion list
             List<Champion> champData = APIMessage.MakeRequest();
-            
+
             //Construct question list
             Questions questionList = new Questions(Document);
-            
+
             //Holds answers to questions
             Answer ans = new Answer();
-            
+
             //Ask questions
-            foreach(QuestionObj q in questionList.questions)
+            foreach (QuestionObj q in questionList.questions)
             {
-                Console.WriteLine(q.question);
-                foreach (string answer in q.answers)
+                Console.WriteLine(q.Question);
+                foreach (AnswerObj answer in q.Answers)
                 {
-                    Console.WriteLine(answer);
+                    Console.WriteLine(answer.Text);
                 }
                 string input = (Console.ReadLine());
-                LogQuestion(ans, q.symbol, input);
+                champData = ChampionUtil.FilterChampions(input, q.Symbol, champData);
             }
-            Console.WriteLine(ChampionUtil.FilterCrewByCriteria(ans, champData));
+            foreach (Champion c in champData)
+            {
+                Console.WriteLine(c.Name);
+            }
         }
 
-        private static void LogQuestion(Answer ans, string questionSymbol, string answer)
-        {
-            if (questionSymbol == LaneQuestion)
-            {
-                Lane.TryParse(answer, out Lane lane);
-                ans.lane = lane;
-            }
-            else if (questionSymbol == RoleQuestion)
-            {
-                Role.TryParse(answer, out Role role);
-                ans.role = role;
-            }
-            else if (questionSymbol == DamageQuestion)
-            {
-                DamageType.TryParse(answer, out DamageType dmg);
-                ans.dmgType = dmg;
-            }
-            else if (questionSymbol == NewnessQuestion)
-            {
-                IsNew.TryParse(answer, out IsNew n);
-                ans.isNew = n;
-            }
-        }
-        
         private const string Document = @"---
         questions:
             - symbol: LaneQuestion
               question: What lane do you feel like playing?
               answers:
-                - Top
-                - Jungle
-                - Mid
-                - Bottom
-                - Support
+                - answer:
+                    value: top
+                    text: Top Lane
+                - answer:
+                    value: jungle
+                    text: Jungle
+                - answer:
+                    value: mid
+                    text: Mid Lane
+                - answer:
+                    value: bottom
+                    text: Bottom
+                - answer:
+                    value: support
+                    text: Support
             - symbol: RoleQuestion
               question: What style do you want to play?
               answers:
-                - Ranged
-                - Bruiser
-                - Tank
+                - answer:
+                    value: ranged
+                    text: Ranged
+                - answer:
+                    value: bruiser
+                    text: Bruiser
+                - answer:
+                    value: tank
+                    text: Tank
             - symbol: DamageQuestion
               question: Preference on damage type?
               answers:
-                - AP
-                - AD
-                - Hybrid
-                - Don't Care
+                - answer:
+                    value: AP
+                    text: AP
+                - answer:
+                    value: AD
+                    text: AD
+                - answer:
+                    value: hybrid
+                    text: Hybrid
+                - answer:
+                    value: NoPref
+                    text: Don't Care
             - symbol: NewnessQuestion
               question: Do you want to try something new, or play something you know?
               answers:
-                - Try something new!
-                - Give me something familiar
-                - I really don't care
+                - answer:
+                    value: Yes
+                    text: Try something new!
+                - answer:
+                    value: No
+                    text: Give me something familiar
+                - answer:
+                    value: NoPref
+                    text: I really don't care
 ...";
     }
 }

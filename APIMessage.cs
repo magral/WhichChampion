@@ -27,11 +27,22 @@ namespace ChampionSelector
         public List<string> Tags { get; set; }
         public Dictionary<string, int> Info { get; set; } 
     }
+
+    public class SummonerDto
+    {
+        public int Id { get; set; }
+    }
+
+    public class MasteryDto
+    {
+        public int ChampionLevel { get; set; }
+    }
+    
     public class APIMessage
     {
         public static List<Champion> MakeRequest()
         {
-            const string URL = "https://na1.api.riotgames.com/lol/static-data/v3/champions?locale=en_US&champListData=info&champListData=tags&dataById=false&api_key={key}";
+            const string URL = "https://na1.api.riotgames.com/lol/static-data/v3/champions?locale=en_US&champListData=info&champListData=tags&dataById=false&api_key=RGAPI-a52b1955-4df2-43e9-9d35-08df57d52144";
 
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(URL);
@@ -56,6 +67,53 @@ namespace ChampionSelector
             }
 
             return champions;
+        }
+
+        public static bool GetChampionNewness(int summonerid, int championid)
+        {
+            string URL = String.Format("https://na1.api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/{0}/by-champion/{1}&api_key=RGAPI-a52b1955-4df2-43e9-9d35-08df57d52144", summonerid, championid);
+
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(URL);
+
+            // Add an Accept header for JSON format.
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
+            // List data response.
+            HttpWebRequest request = HttpWebRequest.Create(URL) as HttpWebRequest;
+            request.Method = "GET";
+            request.ContentType = "application/json";
+            WebResponse response = request.GetResponse();
+
+            var resp = new StreamReader(response.GetResponseStream()).ReadToEnd();
+            var data = JsonConvert.DeserializeObject<MasteryDto>(resp);
+
+            bool isNew = data.ChampionLevel > 4;
+            return isNew;
+        }
+
+        public static int GetSummonerInfo(string summonerName)
+        {
+            string URL = String.Format("https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/{0}&api_key=RGAPI-a52b1955-4df2-43e9-9d35-08df57d52144", summonerName);
+
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(URL);
+
+            // Add an Accept header for JSON format.
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+
+            // List data response.
+            HttpWebRequest request = HttpWebRequest.Create(URL) as HttpWebRequest;
+            request.Method = "GET";
+            request.ContentType = "application/json";
+            WebResponse response = request.GetResponse();
+
+            var resp = new StreamReader(response.GetResponseStream()).ReadToEnd();
+            var data = JsonConvert.DeserializeObject<SummonerDto>(resp);
+
+            return data.id;
         }
     }
 }

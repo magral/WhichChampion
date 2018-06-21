@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 2,
   "targets": {
     ".NETCoreApp,Version=v2.0": {
       "AtkSharp/3.22.24.36": {
@@ -4049,68 +4049,45 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Leah\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "/Users/leahmagrane/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Documents\\RiderProjects\\ChampionSelector\\ChampionSelector.csproj",
+      "projectUniqueName": "/Users/leahmagrane/Documents/WhichChampion/ChampionSelector.csproj",
       "projectName": "ChampionSelector",
-      "projectPath": "E:\\Documents\\RiderProjects\\ChampionSelector\\ChampionSelector.csproj",
-      "packagesPath": "C:\\Users\\Leah\\.nuget\\packages\\",
-      "outputPath": "E:\\Documents\\RiderProjects\\ChampionSelector\\obj\\",
+      "projectPath": "/Users/leahmagrane/Documents/WhichChampion/ChampionSelector.csproj",
+      "outputPath": "/Users/leahmagrane/Documents/WhichChampion/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
-      "configFilePaths": [
-        "C:\\Users\\Leah\\AppData\\Roaming\\NuGet\\NuGet.Config"
-      ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
-      "sources": {
-        "https://api.nuget.org/v3/index.json": {}
-      },
       "frameworks": {
         "netcoreapp2.0": {
           "projectReferences": {}
         }
-      },
-      "warningProperties": {
-        "warnAsError": [
-          "NU1605"
-        ]
       }
     },
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
+          "Microsoft.NETCore.App": {
+            "target": "Package",
+            "version": "2.0"
+          },
           "GtkSharp": {
             "target": "Package",
-            "version": "[3.22.24.36, )"
+            "version": "3.22.24.36"
           },
           "Microsoft.AspNet.WebApi.Client": {
             "target": "Package",
-            "version": "[5.2.6, )"
-          },
-          "Microsoft.NETCore.App": {
-            "suppressParent": "All",
-            "target": "Package",
-            "version": "[2.0.0, )",
-            "autoReferenced": true
+            "version": "5.2.6"
           },
           "YamlDotNet": {
             "target": "Package",
-            "version": "[4.3.2-pre0479, )"
+            "version": "4.3.2-pre0479"
           }
-        },
-        "imports": [
-          "net461"
-        ],
-        "assetTargetFallback": true,
-        "warn": true
+        }
       }
     }
   }

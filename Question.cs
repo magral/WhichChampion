@@ -19,10 +19,14 @@ namespace ChampionSelector
         
     public class QuestionObj
     {
-        public string symbol { get; set; }
-        public string question { get; set; }
-        public List<string> answers { get; set; }
-         
+        public string Symbol { get; set; }
+        public string Question { get; set; }
+        public List<AnswerObj> Answers { get; set; }  
     }
-   
+
+    public class AnswerObj
+    {
+        public string Value { get; set; }
+        public string Text { get; set; }
+    }
 }
