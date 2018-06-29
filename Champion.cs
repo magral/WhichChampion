@@ -11,16 +11,15 @@ namespace ChampionSelector
         Mid,
         Top,
         Support,
-        Jungle
+        Jungle,
+        NoPref
     }
 
-    public enum Role
+    public enum Playstyle
     {
-        Fighter = 0,
-        Ranged = 1,
-        Tank = 2,
-        Marksman = 3,
-        Melee = 4
+        Ranged,
+        Melee,
+        NoPref
     }
 
     public enum DamageType
@@ -40,44 +39,26 @@ namespace ChampionSelector
 
     public class Champion
     {
-        private string _name;
-        private List<Lane> _mainLane;
-        private List<Role> _roles;
-        private DamageType _damageType;
-        private IsNew _isNew;
+        private readonly int _id;
 
-        public DamageType DmgType
+        public DamageType DmgType { get; }
+        public IsNew TryNew { get; }
+        public List<Lane> MainLane { get; }
+        public Playstyle Style { get; }
+        public string Name { get; }
+
+        public Champion(string name, int id, List<string> tags, Dictionary<string, int> damageTypes)
         {
-            get { return _damageType; }
+            Name = name;
+            _id = id;
+            DmgType = GetDamageType(damageTypes);
+            MainLane = GetLanes(tags);
+            Style = GetPlaystyle(damageTypes);
+            TryNew = GetNewness();
         }
 
-        public IsNew TryNew
-        {
-            get { return _isNew; }
-        }
-
-        public List<Lane> MainLane
-        {
-            get { return _mainLane; }
-        }
-
-        public List<Role> Roles
-        {
-            get { return _roles; }
-        }
-
-        public string Name
-        {
-            get { return _name; }
-        }
-
-        public Champion(string name, List<string> tags, Dictionary<string, int> damageTypes)
-        {
-            _name = name;
-            _damageType = GetDamageType(damageTypes);
-            _mainLane = GetLanes(tags);
-        }
-
+        // Get the lane the champion plays by a combination of damage type and designated roles
+        // Theoretically this could change if the meta does, but we'll go with what's generally accepted for now
         private List<Lane> GetLanes(List<string> tags)
         {
             List<Lane> lanes = new List<Lane>();
@@ -88,37 +69,38 @@ namespace ChampionSelector
             bool isSupport = tags.Contains("support");
             bool isMarksman = tags.Contains("marksman");
 
-            //Super edge cases
-            if (_name == "kindred")
+            // Super edge cases, these champions are known junglers, despite being marksman and AD. 
+            if (Name == "kindred")
             {
                 lanes.Add(Lane.Jungle);
                 return lanes;
             }
-            if (_name == "graves")
+            if (Name == "graves")
             {
                 lanes.Add(Lane.Jungle);
                 lanes.Add(Lane.Bottom);
                 return lanes;
             }
+            //
             if (isSupport)
             {
                 lanes.Add(Lane.Support);
             }
-            if (isFighter && !isMage && (_damageType == DamageType.AD || _damageType == DamageType.Hybrid))
+            if (isFighter && !isMage && (DmgType == DamageType.AD || DmgType == DamageType.Hybrid))
             {
                 lanes.Add(Lane.Top);
                 lanes.Add(Lane.Jungle);
             }
-            else if (isFighter && _damageType == DamageType.AP)
+            else if (isFighter && DmgType == DamageType.AP)
             {
                 lanes.Add(Lane.Mid);
                 lanes.Add(Lane.Top);
             }
-            else if (isAssassin && _damageType == DamageType.AP)
+            else if (isAssassin && DmgType == DamageType.AP)
             {
                 lanes.Add(Lane.Mid);
             }
-            else if (isAssassin && (_damageType == DamageType.AD || _damageType == DamageType.Hybrid))
+            else if (isAssassin && (DmgType == DamageType.AD || DmgType == DamageType.Hybrid))
             {
                 lanes.Add(Lane.Mid);
                 lanes.Add(Lane.Top);
@@ -128,27 +110,27 @@ namespace ChampionSelector
                 lanes.Add(Lane.Mid);
                 lanes.Add(Lane.Jungle);
             }
-            else if (isTank && isFighter && _damageType == DamageType.AD)
+            else if (isTank && isFighter && DmgType == DamageType.AD)
             {
                 lanes.Add(Lane.Top);
             }
-            else if (isTank && isFighter && _damageType == DamageType.AP)
+            else if (isTank && isFighter && DmgType == DamageType.AP)
             {
                 lanes.Add(Lane.Support);
             }
-            else if (isTank && isFighter && _damageType == DamageType.Hybrid)
+            else if (isTank && isFighter && DmgType == DamageType.Hybrid)
             {
                 lanes.Add(Lane.Jungle);
             }
-            else if (isMarksman && (_damageType == DamageType.AD || _damageType == DamageType.Hybrid))
+            else if (isMarksman && (DmgType == DamageType.AD || DmgType == DamageType.Hybrid))
             {
                 lanes.Add(Lane.Bottom);
             }
-            else if (isMarksman && _damageType == DamageType.AP)
+            else if (isMarksman && DmgType == DamageType.AP)
             {
                 lanes.Add(Lane.Top);
             }
-            else if (isTank && (_damageType == DamageType.AD || _damageType == DamageType.AP))
+            else if (isTank && (DmgType == DamageType.AD || DmgType == DamageType.AP))
             {
                 lanes.Add(Lane.Top);
                 lanes.Add(Lane.Jungle);
@@ -169,14 +151,24 @@ namespace ChampionSelector
             return DamageType.Hybrid;
         }
 
-        private Role GetRole(Dictionary<string, int> damageTypes)
+        private Playstyle GetPlaystyle(Dictionary<string, int> stats)
         {
-            return Role.Fighter;
+            if (stats["rangedattack"] >= 450)
+            {
+                return Playstyle.Ranged;
+            }
+            return Playstyle.Melee;
         }
 
         private IsNew GetNewness()
         {
-            
+            int accountId = APIMessage.GetSummonerInfo("bearlyleah");
+            bool isPlayed = APIMessage.GetChampionNewness(accountId, _id);
+            if (isPlayed)
+            {
+                return IsNew.Yes;
+            }
+            return IsNew.No;
         }
     }
 }

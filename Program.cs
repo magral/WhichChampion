@@ -32,7 +32,9 @@ namespace ChampionSelector
                 {
                     Console.WriteLine(answer.Text);
                 }
+                //Get Answer
                 string input = (Console.ReadLine());
+                //Filter list of available champions
                 champData = ChampionUtil.FilterChampions(input, q.Symbol, champData);
             }
             foreach (Champion c in champData)
@@ -68,11 +70,11 @@ namespace ChampionSelector
                     value: ranged
                     text: Ranged
                 - answer:
-                    value: bruiser
-                    text: Bruiser
+                    value: melee
+                    text: Melee
                 - answer:
-                    value: tank
-                    text: Tank
+                    value: nopref
+                    text: Whatever is fine with me.
             - symbol: DamageQuestion
               question: Preference on damage type?
               answers:

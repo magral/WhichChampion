@@ -18,7 +18,7 @@ namespace ChampionSelector
             }
             else if (questionSymbol == RoleQuestion)
             {
-                Role.TryParse(input, out Role role);
+                Playstyle.TryParse(input, out Playstyle role);
                 return FilterChampionsByCriteria(role, champions);
             }
             else if (questionSymbol == DamageQuestion)
@@ -47,12 +47,12 @@ namespace ChampionSelector
             return options;
         }
         
-        private static List<Champion> FilterChampionsByCriteria(Role role, List<Champion> champions)
+        private static List<Champion> FilterChampionsByCriteria(Playstyle playstyle, List<Champion> champions)
         {
             List<Champion> options = new List<Champion>();
             foreach (Champion champ in champions)
             {
-                if (champ.Roles.Contains(role))
+                if (champ.Style == playstyle)
                 {
                     options.Add(champ);
                 }
@@ -78,7 +78,7 @@ namespace ChampionSelector
             List<Champion> options = new List<Champion>();
             foreach (Champion champ in champions)
             {
-                if (dmgType == champ.DmgType;)
+                if (dmgType == champ.DmgType)
                 {
                     options.Add(champ);
                 }

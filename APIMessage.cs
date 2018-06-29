@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Runtime.InteropServices.ComTypes;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace ChampionSelector
 {
-    public class ChampionDto 
+    public class ChampionDto
     {
         public string Type { get; set; }
         public string Version { get; set; }
@@ -24,8 +21,9 @@ namespace ChampionSelector
         public string Key { get; set; }
         public string Name { get; set; }
         public string Title { get; set; }
+        public Dictionary<string, float> Stats { get; set; }
         public List<string> Tags { get; set; }
-        public Dictionary<string, int> Info { get; set; } 
+        public Dictionary<string, int> Info { get; set; }    
     }
 
     public class SummonerDto
@@ -37,13 +35,17 @@ namespace ChampionSelector
     {
         public int ChampionLevel { get; set; }
     }
-    
+
     public class APIMessage
     {
+        static string ApiKey = "RGAPI-2deff37f-69a7-4ad6-8bdc-b2ba171e959d";
+
         public static List<Champion> MakeRequest()
         {
-            const string URL = "https://na1.api.riotgames.com/lol/static-data/v3/champions?locale=en_US&champListData=info&champListData=tags&dataById=false&api_key=RGAPI-a52b1955-4df2-43e9-9d35-08df57d52144";
 
+            string URL =
+                $"https://na1.api.riotgames.com/lol/static-data/v3/champions?locale=en_US&tags=info&tags=stats&tags=tags&dataById=false&api_key={ApiKey}";
+            //https://na1.api.riotgames.com/lol/static-data/v3/champions?locale=en_US&champListData=info&champListData=tags&dataById=false
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(URL);
 
@@ -53,13 +55,14 @@ namespace ChampionSelector
 
             // List data response.
             HttpWebRequest request = HttpWebRequest.Create(URL) as HttpWebRequest;
+
             request.Method = "GET";
             request.ContentType = "application/json";
             WebResponse response = request.GetResponse();
 
             var resp = new StreamReader(response.GetResponseStream()).ReadToEnd();
             var data = JsonConvert.DeserializeObject<ChampionDto>(resp);
-            
+
             List<Champion> champions = new List<Champion>();
             foreach (var c in data.Data)
             {
@@ -69,9 +72,13 @@ namespace ChampionSelector
             return champions;
         }
 
+
         public static bool GetChampionNewness(int summonerid, int championid)
         {
-            string URL = String.Format("https://na1.api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/{0}/by-champion/{1}&api_key=RGAPI-a52b1955-4df2-43e9-9d35-08df57d52144", summonerid, championid);
+            string URL =
+                String.Format(
+                    "https://na1.api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/{0}/by-champion/{1}&api_key={2}",
+                    summonerid, championid, ApiKey);
 
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(URL);
@@ -95,7 +102,10 @@ namespace ChampionSelector
 
         public static int GetSummonerInfo(string summonerName)
         {
-            string URL = String.Format("https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/{0}&api_key=RGAPI-a52b1955-4df2-43e9-9d35-08df57d52144", summonerName);
+            string URL =
+                String.Format(
+                    "https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/{0}&api_key={1}",
+                    summonerName, ApiKey);
 
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(URL);
@@ -113,7 +123,7 @@ namespace ChampionSelector
             var resp = new StreamReader(response.GetResponseStream()).ReadToEnd();
             var data = JsonConvert.DeserializeObject<SummonerDto>(resp);
 
-            return data.id;
+            return data.Id;
         }
     }
 }
