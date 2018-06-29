@@ -9,6 +9,7 @@ namespace ChampionSelector
         private const string DamageQuestion = "DamageQuestion";
         private const string NewnessQuestion = "NewnessQuestion";
 
+        //Wrapper method to determine how to filter champions given generic input
         public static List<Champion> FilterChampions(string input, string questionSymbol, List<Champion> champions)
         {
             if (questionSymbol == LaneQuestion)
@@ -34,6 +35,8 @@ namespace ChampionSelector
             return champions;
         }
 
+        //Overloaded methods to filter champions by input
+        //All return new list of potential champions based on given input
         private static List<Champion> FilterChampionsByCriteria(Lane lane, List<Champion> champions)
         {
             List<Champion> options = new List<Champion>();

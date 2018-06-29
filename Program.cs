@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using GLib;
-using YamlDotNet.Serialization;
 
 namespace ChampionSelector
 {    
@@ -17,9 +15,11 @@ namespace ChampionSelector
         {
             //Construct API call and get champion list
             List<Champion> champData = APIMessage.MakeRequest();
+            
+            string questionDocument = File.ReadAllText(Directory.GetCurrentDirectory() + "/Data.yaml");
 
             //Construct question list
-            Questions questionList = new Questions(Document);
+            Questions questionList = new Questions(questionDocument);
 
             //Holds answers to questions
             Answer ans = new Answer();
@@ -34,74 +34,14 @@ namespace ChampionSelector
                 }
                 //Get Answer
                 string input = (Console.ReadLine());
+                string answerValue = q.Answers[Int32.Parse(input)].Value;
                 //Filter list of available champions
-                champData = ChampionUtil.FilterChampions(input, q.Symbol, champData);
+                champData = ChampionUtil.FilterChampions(answerValue, q.Symbol, champData);
             }
             foreach (Champion c in champData)
             {
                 Console.WriteLine(c.Name);
             }
         }
-
-        private const string Document = @"---
-        questions:
-            - symbol: LaneQuestion
-              question: What lane do you feel like playing?
-              answers:
-                - answer:
-                    value: top
-                    text: Top Lane
-                - answer:
-                    value: jungle
-                    text: Jungle
-                - answer:
-                    value: mid
-                    text: Mid Lane
-                - answer:
-                    value: bottom
-                    text: Bottom
-                - answer:
-                    value: support
-                    text: Support
-            - symbol: RoleQuestion
-              question: What style do you want to play?
-              answers:
-                - answer:
-                    value: ranged
-                    text: Ranged
-                - answer:
-                    value: melee
-                    text: Melee
-                - answer:
-                    value: nopref
-                    text: Whatever is fine with me.
-            - symbol: DamageQuestion
-              question: Preference on damage type?
-              answers:
-                - answer:
-                    value: AP
-                    text: AP
-                - answer:
-                    value: AD
-                    text: AD
-                - answer:
-                    value: hybrid
-                    text: Hybrid
-                - answer:
-                    value: NoPref
-                    text: Don't Care
-            - symbol: NewnessQuestion
-              question: Do you want to try something new, or play something you know?
-              answers:
-                - answer:
-                    value: Yes
-                    text: Try something new!
-                - answer:
-                    value: No
-                    text: Give me something familiar
-                - answer:
-                    value: NoPref
-                    text: I really don't care
-...";
     }
 }

@@ -1,27 +1,58 @@
-- symbol: question_1
-  question: "What lane do you feel like playing?"
-  answers:
-    - "Top"
-    - "Jungle"
-    - "Mid"
-    - "Bottom"
-    - "Support"
-- symbol: question_2
-  question: "What style do you want to play?"
-  answers:
-    - "Ranged"
-    - "Bruiser"
-    - "Tank"
-- symbol: question_3
-  question: "Preference on damage type?"
-  answers:
-    - "AP"
-    - "AD"
-    - "Hybrid"
-    - "Don't Care"
-- symbol: question_4
-  question: Do you want to try something new, or play something you know?"
-  answers:
-    - "Try something new!"
-    - "Give me something familiar"
-    - "I really don't care"
+questions:
+  - symbol: LaneQuestion
+    question: What lane do you feel like playing?
+    answers:
+      - answer:
+          value: top
+          text: Top Lane
+      - answer:
+          value: jungle
+          text: Jungle
+      - answer:
+          value: mid
+          text: Mid Lane
+      - answer:
+          value: bottom
+          text: Bottom
+      - answer:
+          value: support
+          text: Support
+  - symbol: RoleQuestion
+    question: What style do you want to play?
+    answers:
+      - answer:
+          value: ranged
+          text: Ranged
+      - answer:
+          value: melee
+          text: Melee
+      - answer:
+          value: nopref
+          text: Whatever is fine with me.
+  - symbol: DamageQuestion
+    question: Preference on damage type?
+    answers:
+      - answer:
+          value: AP
+          text: AP
+      - answer:
+          value: AD
+          text: AD
+      - answer:
+          value: hybrid
+          text: Hybrid
+      - answer:
+          value: NoPref
+          text: Don't Care
+  - symbol: NewnessQuestion
+    question: Do you want to try something new, or play something you know?
+    answers:
+      - answer:
+          value: Yes
+          text: Try something new!
+      - answer:
+          value: No
+          text: Give me something familiar
+      - answer:
+          value: NoPref
+          text: I really don't care
