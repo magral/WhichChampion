@@ -38,7 +38,7 @@ namespace ChampionSelector
 
     public class APIMessage
     {
-        static string ApiKey = "RGAPI-2deff37f-69a7-4ad6-8bdc-b2ba171e959d";
+        static string ApiKey = "{}";
 
         public static List<Champion> MakeRequest()
         {

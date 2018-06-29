@@ -4,6 +4,7 @@ using YamlDotNet.Serialization;
 
 namespace ChampionSelector
 {
+    //Serializes Data.yaml
     public class Questions
     {
         public List<QuestionObj> questions { get; }

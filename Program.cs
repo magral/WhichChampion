@@ -21,9 +21,6 @@ namespace ChampionSelector
             //Construct question list
             Questions questionList = new Questions(questionDocument);
 
-            //Holds answers to questions
-            Answer ans = new Answer();
-
             //Ask questions
             foreach (QuestionObj q in questionList.questions)
             {
