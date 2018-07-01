@@ -47,14 +47,14 @@ namespace ChampionSelector
         public Playstyle Style { get; }
         public string Name { get; }
 
-        public Champion(string name, int id, List<string> tags, Dictionary<string, int> damageTypes)
+        public Champion(string name, int id, List<string> tags, Dictionary<string, int> damageTypes, Dictionary<string, float> stats, MasteryDto masteries)
         {
             Name = name;
             _id = id;
             DmgType = GetDamageType(damageTypes);
             MainLane = GetLanes(tags);
-            Style = GetPlaystyle(damageTypes);
-            TryNew = GetNewness();
+            Style = GetPlaystyle(stats);
+            TryNew = GetNewness(masteries.Masteries);
         }
 
         // Get the lane the champion plays by a combination of damage type and designated roles
@@ -151,22 +151,26 @@ namespace ChampionSelector
             return DamageType.Hybrid;
         }
 
-        private Playstyle GetPlaystyle(Dictionary<string, int> stats)
+        private Playstyle GetPlaystyle(Dictionary<string, float> stats)
         {
-            if (stats["rangedattack"] >= 450)
+            if (stats["attackrange"] >= 450)
             {
                 return Playstyle.Ranged;
             }
             return Playstyle.Melee;
         }
 
-        private IsNew GetNewness()
+        private IsNew GetNewness(List<Mastery> masteries)
         {
-            int accountId = APIMessage.GetSummonerInfo("bearlyleah");
-            bool isPlayed = APIMessage.GetChampionNewness(accountId, _id);
-            if (isPlayed)
+            foreach (Mastery mastery in masteries)
             {
-                return IsNew.Yes;
+                if (mastery.ChampionId == _id)
+                {
+                    if (mastery.ChampionLevel >= 4)
+                    {
+                        return IsNew.Yes;
+                    }
+                }
             }
             return IsNew.No;
         }

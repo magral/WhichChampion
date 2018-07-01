@@ -6,6 +6,9 @@
     "projectPath": "/Users/leahmagrane/Documents/WhichChampion/ChampionSelector.csproj",
     "outputPath": "/Users/leahmagrane/Documents/WhichChampion/obj/",
     "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+    ],
     "originalTargetFrameworks": [
       "netcoreapp2.0"
     ],
@@ -13,28 +16,63 @@
       "netcoreapp2.0": {
         "projectReferences": {}
       }
+    },
+    "warningProperties": {
+      "warnAsError": [
+        "NU1605"
+      ]
     }
   },
   "frameworks": {
     "netcoreapp2.0": {
       "dependencies": {
-        "Microsoft.NETCore.App": {
-          "target": "Package",
-          "version": "2.0"
-        },
         "GtkSharp": {
           "target": "Package",
-          "version": "3.22.24.36"
+          "version": "[3.22.24.36, )"
         },
         "Microsoft.AspNet.WebApi.Client": {
           "target": "Package",
-          "version": "5.2.6"
+          "version": "[5.2.6, )"
+        },
+        "Microsoft.AspNetCore.Hosting": {
+          "target": "Package",
+          "version": "[2.1.1, )"
+        },
+        "Microsoft.Extensions.DependencyInjection": {
+          "target": "Package",
+          "version": "[2.1.1, )"
+        },
+        "Microsoft.NETCore.App": {
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[2.1.1, )"
+        },
+        "System.Net.Http": {
+          "target": "Package",
+          "version": "[4.3.3, )"
+        },
+        "System.Net.Requests": {
+          "target": "Package",
+          "version": "[4.3.0, )"
+        },
+        "System.Runtime": {
+          "target": "Package",
+          "version": "[4.3.0, )"
         },
         "YamlDotNet": {
           "target": "Package",
-          "version": "4.3.2-pre0479"
+          "version": "[4.3.2-pre0479, )"
+        },
+        "xunit": {
+          "target": "Package",
+          "version": "[2.3.1, )"
         }
-      }
+      },
+      "imports": [
+        "net461"
+      ],
+      "assetTargetFallback": true,
+      "warn": true
     }
   }
 }

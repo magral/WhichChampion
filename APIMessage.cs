@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace ChampionSelector
@@ -17,8 +18,8 @@ namespace ChampionSelector
 
     public class Champ
     {
-        public int Id { get; set; }
-        public string Key { get; set; }
+        public string Id { get; set; }
+        public int Key { get; set; }
         public string Name { get; set; }
         public string Title { get; set; }
         public Dictionary<string, float> Stats { get; set; }
@@ -33,97 +34,93 @@ namespace ChampionSelector
 
     public class MasteryDto
     {
+        public List<Mastery> Masteries { get; set; }
+        
+    }
+
+    public class Mastery
+    {
         public int ChampionLevel { get; set; }
+        public int ChampionId { get; set; }
     }
 
     public class APIMessage
     {
-        static string ApiKey = "{}";
 
-        public static List<Champion> MakeRequest()
+        private readonly IHttpClientFactory _httpClientFactory;
+        public APIMessage(IHttpClientFactory httpClientFactory) {
+            _httpClientFactory = httpClientFactory;
+        }
+        
+        static string ApiKey = "{RGAPI-ae331b81-b059-4614-be71-8449c9ad3fab}";
+
+        public List<Champion> MakeChampionRequest(int summonerid)
         {
-
-            string URL =
-                $"https://na1.api.riotgames.com/lol/static-data/v3/champions?locale=en_US&tags=info&tags=stats&tags=tags&dataById=false&api_key={ApiKey}";
-            //https://na1.api.riotgames.com/lol/static-data/v3/champions?locale=en_US&champListData=info&champListData=tags&dataById=false
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(URL);
-
-            // Add an Accept header for JSON format.
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-
-            // List data response.
-            HttpWebRequest request = HttpWebRequest.Create(URL) as HttpWebRequest;
-
-            request.Method = "GET";
-            request.ContentType = "application/json";
-            WebResponse response = request.GetResponse();
-
-            var resp = new StreamReader(response.GetResponseStream()).ReadToEnd();
-            var data = JsonConvert.DeserializeObject<ChampionDto>(resp);
-
+            var data = MakeChampionRequestAsync();
+            var champData = data.Result;
+            var masteries = GetChampionNewness(summonerid);
             List<Champion> champions = new List<Champion>();
-            foreach (var c in data.Data)
+            foreach (var c in champData.Data)
             {
-                champions.Add(new Champion(c.Value.Name, c.Value.Tags, c.Value.Info));
+                champions.Add(new Champion(c.Value.Name, c.Value.Key, c.Value.Tags, c.Value.Info, c.Value.Stats, masteries));
             }
 
             return champions;
         }
 
-
-        public static bool GetChampionNewness(int summonerid, int championid)
+        async Task<ChampionDto> MakeChampionRequestAsync()
         {
-            string URL =
-                String.Format(
-                    "https://na1.api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/{0}/by-champion/{1}&api_key={2}",
-                    summonerid, championid, ApiKey);
-
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(URL);
+            HttpClient ddragonClient = _httpClientFactory.CreateClient("http://ddragon.leagueoflegends.com/");
 
             // Add an Accept header for JSON format.
-            client.DefaultRequestHeaders.Accept.Add(
+            ddragonClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
             // List data response.
-            HttpWebRequest request = HttpWebRequest.Create(URL) as HttpWebRequest;
-            request.Method = "GET";
-            request.ContentType = "application/json";
-            WebResponse response = request.GetResponse();
+            HttpResponseMessage response = await ddragonClient.GetAsync("cdn/8.12.1/data/en_US/champion.json");
 
-            var resp = new StreamReader(response.GetResponseStream()).ReadToEnd();
-            var data = JsonConvert.DeserializeObject<MasteryDto>(resp);
-
-            bool isNew = data.ChampionLevel > 4;
-            return isNew;
+            var data = await response.Content.ReadAsStringAsync();
+            var champs = JsonConvert.DeserializeObject<ChampionDto>(data);
+            return champs;
         }
 
-        public static int GetSummonerInfo(string summonerName)
+
+        public MasteryDto GetChampionNewness(int summonerid)
         {
-            string URL =
-                String.Format(
-                    "https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/{0}&api_key={1}",
-                    summonerName, ApiKey);
-
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(URL);
-
-            // Add an Accept header for JSON format.
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-
+            var resp = MakeMasteryRequestAsync(summonerid);
+            var data = resp.Result;
+            return data;
+        }
+        
+        private async Task<MasteryDto> MakeMasteryRequestAsync(int summonerid)
+        {
             // List data response.
-            HttpWebRequest request = HttpWebRequest.Create(URL) as HttpWebRequest;
-            request.Method = "GET";
-            request.ContentType = "application/json";
-            WebResponse response = request.GetResponse();
+            HttpClient riotApiClient = _httpClientFactory.CreateClient("https://na1.api.riotgames.com/lol/");
 
-            var resp = new StreamReader(response.GetResponseStream()).ReadToEnd();
-            var data = JsonConvert.DeserializeObject<SummonerDto>(resp);
+            HttpResponseMessage response = await riotApiClient.GetAsync($"champion-mastery/v3/champion-masteries/by-summoner/{summonerid}&api_key={ApiKey}");
+
+            var data = await response.Content.ReadAsStringAsync();
+            var mastery = JsonConvert.DeserializeObject<MasteryDto>(data);
+            return mastery;
+        }
+
+        public int GetSummonerInfo(string summonerName)
+        {
+            var data = MakeSummonerRequestAsync(summonerName).Result;
 
             return data.Id;
+        }
+        
+        private async Task<SummonerDto> MakeSummonerRequestAsync(string summonerName)
+        {
+            HttpClient riotApiClient = _httpClientFactory.CreateClient("https://na1.api.riotgames.com/lol/");
+            
+            // List data response.
+            HttpResponseMessage response = await riotApiClient.GetAsync($"summoner/v3/summoners/by-name/{summonerName}&api_key={ApiKey}");
+
+            var data = await response.Content.ReadAsStringAsync();
+            var summoner = JsonConvert.DeserializeObject<SummonerDto>(data);
+            return summoner;
         }
     }
 }

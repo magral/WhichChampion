@@ -17,6 +17,9 @@ questions:
       - answer:
           value: support
           text: Support
+      - answer:
+          value: NoPref
+          text: Doesn't matter to me.
   - symbol: RoleQuestion
     question: What style do you want to play?
     answers:

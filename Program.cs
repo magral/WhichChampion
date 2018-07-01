@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ChampionSelector
 {    
-    class Program
+    class Program 
     {
-        private const string RoleQuestion = "RoleQuestion";
-        private const string LaneQuestion = "LaneQuestion";
-        private const string DamageQuestion = "DamageQuestion";
-        private const string NewnessQuestion = "NewnessQuestion";
-
+        
         static void Main(string[] args)
         {
             //Construct API call and get champion list
-            List<Champion> champData = APIMessage.MakeRequest();
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddScoped<IHttpClientFactory, HttpClientFactory>();
+            var container = serviceCollection.BuildServiceProvider();
+            APIMessage apiMessage = new APIMessage((IHttpClientFactory) container.GetService(typeof(IHttpClientFactory)));
+            int summonerId = apiMessage.GetSummonerInfo("bearlyleah");
+            List<Champion> champData = apiMessage.MakeChampionRequest(summonerId);
             
             string questionDocument = File.ReadAllText(Directory.GetCurrentDirectory() + "/Data.yaml");
 
