@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -11,17 +8,13 @@ namespace ChampionSelector
 {
     public class ChampionDto
     {
-        public string Type { get; set; }
-        public string Version { get; set; }
         public Dictionary<string, Champ> Data { get; set; }
     }
 
     public class Champ
     {
-        public string Id { get; set; }
         public int Key { get; set; }
         public string Name { get; set; }
-        public string Title { get; set; }
         public Dictionary<string, float> Stats { get; set; }
         public List<string> Tags { get; set; }
         public Dictionary<string, int> Info { get; set; }    
@@ -30,12 +23,6 @@ namespace ChampionSelector
     public class SummonerDto
     {
         public int Id { get; set; }
-    }
-
-    public class MasteryDto
-    {
-        public List<Mastery> Masteries { get; set; }
-        
     }
 
     public class Mastery
@@ -52,7 +39,7 @@ namespace ChampionSelector
             _httpClientFactory = httpClientFactory;
         }
         
-        static string ApiKey = "{RGAPI-ae331b81-b059-4614-be71-8449c9ad3fab}";
+        static string ApiKey = "RGAPI-2596d208-2400-4ddc-bf4e-29484a952d34";
 
         public List<Champion> MakeChampionRequest(int summonerid)
         {
@@ -85,22 +72,25 @@ namespace ChampionSelector
         }
 
 
-        public MasteryDto GetChampionNewness(int summonerid)
+        public List<Mastery> GetChampionNewness(int summonerid)
         {
             var resp = MakeMasteryRequestAsync(summonerid);
             var data = resp.Result;
             return data;
         }
         
-        private async Task<MasteryDto> MakeMasteryRequestAsync(int summonerid)
+        private async Task<List<Mastery>> MakeMasteryRequestAsync(int summonerid)
         {
             // List data response.
             HttpClient riotApiClient = _httpClientFactory.CreateClient("https://na1.api.riotgames.com/lol/");
+            // Add an Accept header for JSON format.
+            riotApiClient.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
 
-            HttpResponseMessage response = await riotApiClient.GetAsync($"champion-mastery/v3/champion-masteries/by-summoner/{summonerid}&api_key={ApiKey}");
+            HttpResponseMessage response = await riotApiClient.GetAsync($"champion-mastery/v3/champion-masteries/by-summoner/{summonerid}?api_key={ApiKey}");
 
             var data = await response.Content.ReadAsStringAsync();
-            var mastery = JsonConvert.DeserializeObject<MasteryDto>(data);
+            var mastery = JsonConvert.DeserializeObject<List<Mastery>>(data);
             return mastery;
         }
 
@@ -115,8 +105,12 @@ namespace ChampionSelector
         {
             HttpClient riotApiClient = _httpClientFactory.CreateClient("https://na1.api.riotgames.com/lol/");
             
+            // Add an Accept header for JSON format.
+            riotApiClient.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+            
             // List data response.
-            HttpResponseMessage response = await riotApiClient.GetAsync($"summoner/v3/summoners/by-name/{summonerName}&api_key={ApiKey}");
+            HttpResponseMessage response = await riotApiClient.GetAsync($"summoner/v3/summoners/by-name/{summonerName}?api_key={ApiKey}");
 
             var data = await response.Content.ReadAsStringAsync();
             var summoner = JsonConvert.DeserializeObject<SummonerDto>(data);

@@ -19,4 +19,3 @@ E:/Documents/RiderProjects/ChampionSelector/obj/Debug/netcoreapp2.0/ChampionSele
 /Users/leahmagrane/Documents/WhichChampion/bin/Debug/netcoreapp2.0/ChampionSelector.runtimeconfig.dev.json
 /Users/leahmagrane/Documents/WhichChampion/bin/Debug/netcoreapp2.0/ChampionSelector.dll
 /Users/leahmagrane/Documents/WhichChampion/bin/Debug/netcoreapp2.0/ChampionSelector.pdb
-/Users/leahmagrane/Documents/WhichChampion/obj/Debug/netcoreapp2.0/ChampionSelector.dll.config

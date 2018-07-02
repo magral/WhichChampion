@@ -12,22 +12,26 @@ namespace ChampionSelector
         //Wrapper method to determine how to filter champions given generic input
         public static List<Champion> FilterChampions(string input, string questionSymbol, List<Champion> champions)
         {
+            if (input == "NoPref")
+            {
+                return champions;
+            }
             if (questionSymbol == LaneQuestion)
             {
                 Lane.TryParse(input, out Lane lane);
                 return FilterChampionsByCriteria(lane, champions);
             }
-            else if (questionSymbol == RoleQuestion)
+            if (questionSymbol == RoleQuestion)
             {
-                Playstyle.TryParse(input, out Playstyle role);
+                AttackRange.TryParse(input, out AttackRange role);
                 return FilterChampionsByCriteria(role, champions);
             }
-            else if (questionSymbol == DamageQuestion)
+            if (questionSymbol == DamageQuestion)
             {
                 DamageType.TryParse(input, out DamageType dmg);
                 return FilterChampionsByCriteria(dmg, champions);
             }
-            else if (questionSymbol == NewnessQuestion)
+            if (questionSymbol == NewnessQuestion)
             {
                 IsNew.TryParse(input, out IsNew n);
                 return FilterChampionsByCriteria(n, champions);
@@ -50,12 +54,12 @@ namespace ChampionSelector
             return options;
         }
         
-        private static List<Champion> FilterChampionsByCriteria(Playstyle playstyle, List<Champion> champions)
+        private static List<Champion> FilterChampionsByCriteria(AttackRange range, List<Champion> champions)
         {
             List<Champion> options = new List<Champion>();
             foreach (Champion champ in champions)
             {
-                if (champ.Style == playstyle)
+                if (champ.Range == range)
                 {
                     options.Add(champ);
                 }

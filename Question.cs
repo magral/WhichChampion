@@ -5,29 +5,44 @@ using YamlDotNet.Serialization;
 namespace ChampionSelector
 {
     //Serializes Data.yaml
-    public class Questions
+    public class QuestionsDeserializer
     {
-        public List<QuestionObj> questions { get; }
-
-        public Questions(string document)
+        private readonly string _document;
+        
+        public QuestionsDeserializer(string document)
         {
-            var input = new StringReader(document);
+            _document = document;
+        }
+
+        public QuestionList ParseDocument()
+        {
+            var input = new StringReader(_document);
             var deserializerBuilder = new DeserializerBuilder();
             var deserializer = deserializerBuilder.Build();
-            deserializer.Deserialize<Questions>(input);
+            return deserializer.Deserialize<QuestionList>(input);;
         }
+    }
+
+    public class QuestionList
+    {
+        public List<QuestionObj> questions { get; set; }
     }
         
     public class QuestionObj
     {
-        public string Symbol { get; set; }
-        public string Question { get; set; }
-        public List<AnswerObj> Answers { get; set; }  
+        public string symbol { get; set; }
+        public string question { get; set; }
+        public List<AnswerList> answers { get; set; }  
+    }
+
+    public class AnswerList
+    {
+        public AnswerObj answer { get; set; }
     }
 
     public class AnswerObj
     {
-        public string Value { get; set; }
-        public string Text { get; set; }
+        public string value { get; set; }
+        public string text { get; set; }
     }
 }

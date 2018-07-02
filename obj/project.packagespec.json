@@ -26,10 +26,6 @@
   "frameworks": {
     "netcoreapp2.0": {
       "dependencies": {
-        "GtkSharp": {
-          "target": "Package",
-          "version": "[3.22.24.36, )"
-        },
         "Microsoft.AspNet.WebApi.Client": {
           "target": "Package",
           "version": "[5.2.6, )"
@@ -45,7 +41,8 @@
         "Microsoft.NETCore.App": {
           "suppressParent": "All",
           "target": "Package",
-          "version": "[2.1.1, )"
+          "version": "[2.0.0, )",
+          "autoReferenced": true
         },
         "System.Net.Http": {
           "target": "Package",

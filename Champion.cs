@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Gtk;
+﻿using System.Collections.Generic;
 
 namespace ChampionSelector
 {
@@ -15,7 +12,7 @@ namespace ChampionSelector
         NoPref
     }
 
-    public enum Playstyle
+    public enum AttackRange
     {
         Ranged,
         Melee,
@@ -44,17 +41,18 @@ namespace ChampionSelector
         public DamageType DmgType { get; }
         public IsNew TryNew { get; }
         public List<Lane> MainLane { get; }
-        public Playstyle Style { get; }
+        public AttackRange Range { get; }
         public string Name { get; }
+        const int maxDiffRange = 2;
 
-        public Champion(string name, int id, List<string> tags, Dictionary<string, int> damageTypes, Dictionary<string, float> stats, MasteryDto masteries)
+        public Champion(string name, int id, List<string> tags, Dictionary<string, int> damageTypes, Dictionary<string, float> stats, List<Mastery> masteries)
         {
             Name = name;
             _id = id;
             DmgType = GetDamageType(damageTypes);
             MainLane = GetLanes(tags);
-            Style = GetPlaystyle(stats);
-            TryNew = GetNewness(masteries.Masteries);
+            Range = GetAttackRange(stats);
+            TryNew = GetNewness(masteries);
         }
 
         // Get the lane the champion plays by a combination of damage type and designated roles
@@ -62,12 +60,12 @@ namespace ChampionSelector
         private List<Lane> GetLanes(List<string> tags)
         {
             List<Lane> lanes = new List<Lane>();
-            bool isFighter = tags.Contains("fighter");
-            bool isAssassin = tags.Contains("assassin");
-            bool isMage = tags.Contains("mage");
-            bool isTank = tags.Contains("tank");
-            bool isSupport = tags.Contains("support");
-            bool isMarksman = tags.Contains("marksman");
+            bool isFighter = tags.Contains("Fighter");
+            bool isAssassin = tags.Contains("Assassin");
+            bool isMage = tags.Contains("Mage");
+            bool isTank = tags.Contains("Tank");
+            bool isSupport = tags.Contains("Support");
+            bool isMarksman = tags.Contains("Marksman");
 
             // Super edge cases, these champions are known junglers, despite being marksman and AD. 
             if (Name == "kindred")
@@ -91,7 +89,7 @@ namespace ChampionSelector
                 lanes.Add(Lane.Top);
                 lanes.Add(Lane.Jungle);
             }
-            else if (isFighter && DmgType == DamageType.AP)
+            else if (isFighter && !isTank && DmgType == DamageType.AP)
             {
                 lanes.Add(Lane.Mid);
                 lanes.Add(Lane.Top);
@@ -140,24 +138,25 @@ namespace ChampionSelector
 
         private DamageType GetDamageType(Dictionary<string, int> damageTypes)
         {
-            if (damageTypes["attack"] > damageTypes["magic"])
+            int diff = damageTypes["attack"] - damageTypes["magic"];
+            if (diff > maxDiffRange)
             {
                 return DamageType.AD;
             }
-            if (damageTypes["attack"] < damageTypes["magic"])
+            if (diff < -maxDiffRange)
             {
                 return DamageType.AP;
             }
             return DamageType.Hybrid;
         }
 
-        private Playstyle GetPlaystyle(Dictionary<string, float> stats)
+        private AttackRange GetAttackRange(Dictionary<string, float> stats)
         {
             if (stats["attackrange"] >= 450)
             {
-                return Playstyle.Ranged;
+                return AttackRange.Ranged;
             }
-            return Playstyle.Melee;
+            return AttackRange.Melee;
         }
 
         private IsNew GetNewness(List<Mastery> masteries)
@@ -168,11 +167,11 @@ namespace ChampionSelector
                 {
                     if (mastery.ChampionLevel >= 4)
                     {
-                        return IsNew.Yes;
+                        return IsNew.No;
                     }
                 }
             }
-            return IsNew.No;
+            return IsNew.Yes;
         }
     }
 }

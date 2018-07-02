@@ -3,19 +3,19 @@ questions:
     question: What lane do you feel like playing?
     answers:
       - answer:
-          value: top
+          value: Top
           text: Top Lane
       - answer:
-          value: jungle
+          value: Jungle
           text: Jungle
       - answer:
-          value: mid
+          value: Mid
           text: Mid Lane
       - answer:
-          value: bottom
+          value: Bottom
           text: Bottom
       - answer:
-          value: support
+          value: Support
           text: Support
       - answer:
           value: NoPref
@@ -24,13 +24,13 @@ questions:
     question: What style do you want to play?
     answers:
       - answer:
-          value: ranged
+          value: Ranged
           text: Ranged
       - answer:
-          value: melee
+          value: Melee
           text: Melee
       - answer:
-          value: nopref
+          value: NoPref
           text: Whatever is fine with me.
   - symbol: DamageQuestion
     question: Preference on damage type?
