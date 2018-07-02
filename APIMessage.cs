@@ -39,7 +39,7 @@ namespace ChampionSelector
             _httpClientFactory = httpClientFactory;
         }
         
-        static string ApiKey = "RGAPI-2596d208-2400-4ddc-bf4e-29484a952d34";
+        static string ApiKey = "";
 
         public List<Champion> MakeChampionRequest(int summonerid)
         {
