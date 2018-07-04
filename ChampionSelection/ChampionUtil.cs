@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ChampionSelector
+namespace ChampionSelection
 {
     public class ChampionUtil
     {

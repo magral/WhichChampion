@@ -2,7 +2,7 @@
 using System.IO;
 using YamlDotNet.Serialization;
 
-namespace ChampionSelector
+namespace ChampionSelection
 {
     //Serializes Data.yaml
     public class QuestionsDeserializer
@@ -32,15 +32,15 @@ namespace ChampionSelector
     {
         public string symbol { get; set; }
         public string question { get; set; }
-        public List<AnswerList> answers { get; set; }  
-    }
-
-    public class AnswerList
-    {
-        public AnswerObj answer { get; set; }
+        public List<AnswerObj> answers { get; set; }  
     }
 
     public class AnswerObj
+    {
+        public AnswerValues answer { get; set; }
+    }
+
+    public class AnswerValues
     {
         public string value { get; set; }
         public string text { get; set; }

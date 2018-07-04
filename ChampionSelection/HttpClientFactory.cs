@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace ChampionSelector
+namespace ChampionSelection
 {
     public interface IHttpClientFactory
     {

@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace ChampionSelector
+namespace ChampionSelection
 {
     public class ChampionDto
     {
@@ -39,7 +39,7 @@ namespace ChampionSelector
             _httpClientFactory = httpClientFactory;
         }
         
-        static string ApiKey = "";
+        static string ApiKey = "RGAPI-cb09e5b0-2eaa-475e-ae3f-e508822014cf";
 
         public List<Champion> MakeChampionRequest(int summonerid)
         {
