@@ -1,34 +1,4 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="ChampionSelection">
-  <StackPanel>
-    <StackPanel>
-      <TextBlock DataContext="{Binding ChildProperty}" FontSize="18">What lane would you like to play?</TextBlock>
-      <RadioButton DataContext="{Binding ChildProperty}" Name="RadioBtn1"> Top Lane</RadioButton>
-      <RadioButton DataContext="{Binding ChildProperty}" Name="RadioBtn2"> Jungle</RadioButton>
-      <RadioButton DataContext="{Binding ChildProperty}"> Mid Lane</RadioButton>
-      <RadioButton DataContext="{Binding ChildProperty}"> Bottom</RadioButton>
-      <RadioButton DataContext="{Binding ChildProperty}"> Support</RadioButton>
-      <RadioButton DataContext="{Binding ChildProperty}"> NoPref</RadioButton>
-    </StackPanel>
-    <StackPanel Name="Question2">
-      <TextBlock DataContext="{Binding ChildProperty}" FontSize="18">What style do you want to play?</TextBlock>
-      <RadioButton DataContext="{Binding ChildProperty}"> Ranged</RadioButton>
-      <RadioButton DataContext="{Binding ChildProperty}"> Melee</RadioButton>
-      <RadioButton DataContext="{Binding ChildProperty}"> Whatever is fine with me</RadioButton>
-    </StackPanel>
-    <StackPanel Name="Question3">
-      <TextBlock DataContext="{Binding ChildProperty}" FontSize="18">Do you have a preference on damage type?</TextBlock>
-      <RadioButton DataContext="{Binding ChildProperty}"> AD</RadioButton>
-      <RadioButton DataContext="{Binding ChildProperty}"> AP</RadioButton>
-      <RadioButton DataContext="{Binding ChildProperty}"> I don't care</RadioButton>
-    </StackPanel>
-    <StackPanel Name="Question4">
-      <TextBlock DataContext="{Binding ChildProperty}" FontSize="18">Do you want to try something new, or play something familiar?</TextBlock>
-      <RadioButton DataContext="{Binding ChildProperty}"> Try something new!</RadioButton>
-      <RadioButton DataContext="{Binding ChildProperty}"> Give me something I know</RadioButton>
-      <RadioButton DataContext="{Binding ChildProperty}"> Whatever</RadioButton>
-    </StackPanel>
-    <Button Command="{Binding SubmitAnswers}">Submit</Button>
-  </StackPanel>
 </Window>

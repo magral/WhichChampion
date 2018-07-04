@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 
 namespace ChampionSelection
 {
+    //Data objects for serializing from Riot API
+    //-------------------------------------------
     public class ChampionDto
     {
         public Dictionary<string, Champ> Data { get; set; }
@@ -30,6 +32,7 @@ namespace ChampionSelection
         public int ChampionLevel { get; set; }
         public int ChampionId { get; set; }
     }
+    //--------------------------------------------
 
     public class APIMessage
     {
@@ -39,19 +42,21 @@ namespace ChampionSelection
             _httpClientFactory = httpClientFactory;
         }
         
-        static string ApiKey = "RGAPI-cb09e5b0-2eaa-475e-ae3f-e508822014cf";
+        private string ApiKey = "RGAPI-cb09e5b0-2eaa-475e-ae3f-e508822014cf";
 
         public List<Champion> MakeChampionRequest(int summonerid)
         {
+            //Make request and return parsed data
             var data = MakeChampionRequestAsync();
             var champData = data.Result;
+            //Get champion masteries to assign to champions
             var masteries = GetChampionNewness(summonerid);
             List<Champion> champions = new List<Champion>();
+            //Create champions
             foreach (var c in champData.Data)
             {
                 champions.Add(new Champion(c.Value.Name, c.Value.Key, c.Value.Tags, c.Value.Info, c.Value.Stats, masteries));
             }
-
             return champions;
         }
 
@@ -81,9 +86,7 @@ namespace ChampionSelection
         
         private async Task<List<Mastery>> MakeMasteryRequestAsync(int summonerid)
         {
-            // List data response.
             HttpClient riotApiClient = _httpClientFactory.CreateClient("https://na1.api.riotgames.com/lol/");
-            // Add an Accept header for JSON format.
             riotApiClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -104,12 +107,9 @@ namespace ChampionSelection
         private async Task<SummonerDto> MakeSummonerRequestAsync(string summonerName)
         {
             HttpClient riotApiClient = _httpClientFactory.CreateClient("https://na1.api.riotgames.com/lol/");
-            
-            // Add an Accept header for JSON format.
             riotApiClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
             
-            // List data response.
             HttpResponseMessage response = await riotApiClient.GetAsync($"summoner/v3/summoners/by-name/{summonerName}?api_key={ApiKey}");
 
             var data = await response.Content.ReadAsStringAsync();
