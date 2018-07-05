@@ -4,17 +4,15 @@ using YamlDotNet.Serialization;
 
 namespace ChampionSelection
 {
-    //Serializes Data.yaml
-    public class QuestionsDeserializer
+    public interface IQuestionDeserializer
     {
-        private readonly string _document;
-        
-        public QuestionsDeserializer(string document)
-        {
-            _document = document;
-        }
+        QuestionList CreateQuestionList(string document);
+    }
 
-        public QuestionList ParseDocument()
+    //Serializes Data.yaml
+    public class QuestionsDeserializer : IQuestionDeserializer
+    {
+        public QuestionList CreateQuestionList(string _document)
         {
             var input = new StringReader(_document);
             var deserializerBuilder = new DeserializerBuilder();

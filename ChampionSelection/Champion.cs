@@ -37,6 +37,7 @@ namespace ChampionSelection
     public class Champion
     {
         private readonly int _id;
+        private readonly int MELEE_MAX_ATTACK_RANGE = 250;
 
         public DamageType DmgType { get; }
         public IsNew TryNew { get; }
@@ -152,11 +153,11 @@ namespace ChampionSelection
 
         private AttackRange GetAttackRange(Dictionary<string, float> stats)
         {
-            if (stats["attackrange"] >= 450)
+            if (stats["attackrange"] <= MELEE_MAX_ATTACK_RANGE)
             {
-                return AttackRange.Ranged;
+                return AttackRange.Melee;
             }
-            return AttackRange.Melee;
+            return AttackRange.Ranged;
         }
 
         private IsNew GetNewness(List<Mastery> masteries)

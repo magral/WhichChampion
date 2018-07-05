@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Xml;
+using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Newtonsoft.Json;
 
 namespace ChampionSelection
@@ -34,33 +38,47 @@ namespace ChampionSelection
     }
     //--------------------------------------------
 
-    public class APIMessage
+    public interface IAPIMessages
     {
-
+        Task<string> GetChampionResult(string summonerName, List<IControl> _radioButtons);
+    }
+    public class APIMessage : IAPIMessages
+    {
+        private string ApiKey = "RGAPI-cb09e5b0-2eaa-475e-ae3f-e508822014cf";
         private readonly IHttpClientFactory _httpClientFactory;
+
         public APIMessage(IHttpClientFactory httpClientFactory) {
             _httpClientFactory = httpClientFactory;
         }
-        
-        private string ApiKey = "RGAPI-cb09e5b0-2eaa-475e-ae3f-e508822014cf";
 
-        public List<Champion> MakeChampionRequest(int summonerid)
+        public async Task<string> GetChampionResult(string summonerName, List<IControl> _radioButtons)
         {
-            //Make request and return parsed data
-            var data = MakeChampionRequestAsync();
-            var champData = data.Result;
-            //Get champion masteries to assign to champions
-            var masteries = GetChampionNewness(summonerid);
+            var summonerId = await MakeSummonerRequestAsync(summonerName);
+            var mastery = await MakeMasteryRequestAsync(summonerId);
+            var championData = await MakeChampionRequestAsync();
+
             List<Champion> champions = new List<Champion>();
-            //Create champions
-            foreach (var c in champData.Data)
+            foreach (var c in championData.Data)
             {
-                champions.Add(new Champion(c.Value.Name, c.Value.Key, c.Value.Tags, c.Value.Info, c.Value.Stats, masteries));
+                champions.Add(new Champion(c.Value.Name, c.Value.Key, c.Value.Tags, c.Value.Info, c.Value.Stats, mastery));
             }
-            return champions;
+            foreach (RadioButton rbtn in _radioButtons)
+            {
+                if ((bool)rbtn.IsChecked)
+                {
+                    champions = ChampionUtil.FilterChampions(rbtn.Name.Split(' ')[0], rbtn.Name.Split(' ')[1], champions);
+                }
+            }
+            if(champions.Count == 0)
+            {
+                return "Sorry, no champions match your query :( Please adjust your inputs and try again";
+            }
+            Random rand = new Random();
+            string champName = champions[rand.Next(champions.Count)].Name;
+            return champName;
         }
 
-        async Task<ChampionDto> MakeChampionRequestAsync()
+        public async Task<ChampionDto> MakeChampionRequestAsync()
         {
             HttpClient ddragonClient = _httpClientFactory.CreateClient("http://ddragon.leagueoflegends.com/");
 
@@ -75,16 +93,8 @@ namespace ChampionSelection
             var champs = JsonConvert.DeserializeObject<ChampionDto>(data);
             return champs;
         }
-
-
-        public List<Mastery> GetChampionNewness(int summonerid)
-        {
-            var resp = MakeMasteryRequestAsync(summonerid);
-            var data = resp.Result;
-            return data;
-        }
         
-        private async Task<List<Mastery>> MakeMasteryRequestAsync(int summonerid)
+        public async Task<List<Mastery>> MakeMasteryRequestAsync(int summonerid)
         {
             HttpClient riotApiClient = _httpClientFactory.CreateClient("https://na1.api.riotgames.com/lol/");
             riotApiClient.DefaultRequestHeaders.Accept.Add(
@@ -97,14 +107,7 @@ namespace ChampionSelection
             return mastery;
         }
 
-        public int GetSummonerInfo(string summonerName)
-        {
-            var data = MakeSummonerRequestAsync(summonerName).Result;
-
-            return data.Id;
-        }
-        
-        private async Task<SummonerDto> MakeSummonerRequestAsync(string summonerName)
+        public async Task<int> MakeSummonerRequestAsync(string summonerName)
         {
             HttpClient riotApiClient = _httpClientFactory.CreateClient("https://na1.api.riotgames.com/lol/");
             riotApiClient.DefaultRequestHeaders.Accept.Add(
@@ -114,7 +117,7 @@ namespace ChampionSelection
 
             var data = await response.Content.ReadAsStringAsync();
             var summoner = JsonConvert.DeserializeObject<SummonerDto>(data);
-            return summoner;
+            return summoner.Id;
         }
     }
 }

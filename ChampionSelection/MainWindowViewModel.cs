@@ -2,6 +2,12 @@
 using ReactiveUI;
 using Avalonia.Controls;
 using System.Collections.Generic;
+using Autofac;
+using System.IO;
+using Avalonia.Markup.Xaml.Data;
+using System.Threading.Tasks;
+using Avalonia;
+using System.Runtime.InteropServices;
 
 namespace ChampionSelection
 {
@@ -10,26 +16,32 @@ namespace ChampionSelection
         StackPanel _panel;
         List<IControl> _radioButtons;
         TextBlock answerBox;
+        TextBox summonerNameInput;
+        QuestionList questionList;
+
+        //Submit command accessor
+        public ReactiveCommand SubmitAnswers { get; }
+        public NotifyTaskCompletion<string> ChampionName { get; private set; }
 
         public MainWindowViewModel(StackPanel panel)
         {
             _panel = panel;
             _radioButtons = new List<IControl>();
+            GetQuestions();
 
             //Command to submit answers
             SubmitAnswers = ReactiveCommand.Create(() =>
             {
-                foreach(RadioButton rbtn in _radioButtons)
-                {
-                    if ( (bool) rbtn.IsChecked) {
-                        Program.championList = ChampionUtil.FilterChampions(rbtn.Name.Split(' ')[0], rbtn.Name.Split(' ')[1], Program.championList);
-                    }
-                }
-                Random rand = new Random();
-                answerBox.Text += Program.championList[rand.Next(Program.championList.Count)].Name;
+                //In an ideal world, we'd have a separate page to input the user summoner name, and pre-load all the champions there
+                //For now though, we are just going to load the champions upon submitting everything.
+                var championGetter = Program.Container.Resolve<IAPIMessages>();
+                string summonerName = summonerNameInput.Text.ToLower().Replace(" ", string.Empty);
+                ChampionName = new NotifyTaskCompletion<string>(championGetter.GetChampionResult(summonerName, _radioButtons));
+                Binding Champions = new Binding("ChampionName.Result", Avalonia.Data.BindingMode.Default);
+                answerBox.Bind(TextBox.TextProperty, Champions);
             });
             //Create UI For questions and add to window
-            foreach (QuestionObj q in Program.questionList.questions)
+            foreach (QuestionObj q in questionList.questions)
             {
                 LoadUIForQuestion(q);
             }
@@ -45,17 +57,41 @@ namespace ChampionSelection
             answerBox = new TextBlock
             {
                 Name = "Answer",
+                Text = "",
+            };
+
+            //Input for summoner name
+            summonerNameInput = new TextBox
+            {
+                Name = "Summoner",
+                Text = "Enter Summoner Name Here",
             };
 
             //Add submit button and answer display to main panel
+            _panel.Children.Add(summonerNameInput);
             _panel.Children.Add(submitButton);
             _panel.Children.Add(answerBox);
         }
 
-        //Submit command accessor
-        public ReactiveCommand SubmitAnswers { get; }
-
-
+        private void GetQuestions()
+        {
+            var questionGetter = Program.Container.Resolve<IQuestionDeserializer>();
+            //TODO: Add Mac file support here
+            string questionDocument;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                questionDocument = File.ReadAllText(Directory.GetCurrentDirectory() + "/Data.yml");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                questionDocument = File.ReadAllText(Directory.GetCurrentDirectory() + "..\\..\\..\\..\\Data.yaml");
+            }
+            else
+            {
+                questionDocument = File.ReadAllText(Directory.GetCurrentDirectory() + "/Data.yml");
+            }
+            questionList = questionGetter.CreateQuestionList(questionDocument);
+        }
         //Helper methods to build UI 
         //---------------------
         public void LoadUIForQuestion(QuestionObj question)
