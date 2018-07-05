@@ -6,6 +6,6 @@ Compatible for Mac & Windows. And probably Linux, but I don't have a machine to 
 
 
 Project Thoughts:
-- A more appropriate to get the API key would be to host a config of some sort on a server, but for something so small it seemed unnecessary
-- For a production application I would have created a local file that saves the list loaded list of champions from the API. It would then only re-ping the
-API on a 2 week cadence on Tuesday (Riot champion release schedule).
+- A more appropriate way to get the API key would be to host a config of on a server, but for something so small it seemed unnecessary
+- For a production application I would have created a local file that saves a list of champions from the API. It would then only re-ping the
+API on a 2 week cadence (Riot champion release schedule).
