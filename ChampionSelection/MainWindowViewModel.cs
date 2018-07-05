@@ -80,7 +80,7 @@ namespace ChampionSelection
             string questionDocument;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                questionDocument = File.ReadAllText(Directory.GetCurrentDirectory() + "/Data.yml");
+                questionDocument = File.ReadAllText(Directory.GetCurrentDirectory() + "/Data.yaml");
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -88,7 +88,7 @@ namespace ChampionSelection
             }
             else
             {
-                questionDocument = File.ReadAllText(Directory.GetCurrentDirectory() + "/Data.yml");
+                questionDocument = File.ReadAllText(Directory.GetCurrentDirectory() + "/Data.yaml");
             }
             questionList = questionGetter.CreateQuestionList(questionDocument);
         }
