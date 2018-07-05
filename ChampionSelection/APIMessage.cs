@@ -44,7 +44,8 @@ namespace ChampionSelection
     }
     public class APIMessage : IAPIMessages
     {
-        private string ApiKey = "RGAPI-cb09e5b0-2eaa-475e-ae3f-e508822014cf";
+        //INSERT API KEY VVVV
+        private string ApiKey = "";
         private readonly IHttpClientFactory _httpClientFactory;
 
         public APIMessage(IHttpClientFactory httpClientFactory) {
